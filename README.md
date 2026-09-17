@@ -1,14 +1,14 @@
-# Solvly - AI Math Assistant
+# Solvly - The AI Math Solver
 
-Solvly is an intelligent, offline-capable AI Math Assistant built for Android that uses on-device Machine Learning to instantly scan, read, and solve mathematical problems. 🚀
+Solvly is an intelligent, offline-capable AI Math Solver built for Android that uses on-device Machine Learning to instantly scan, read, and solve mathematical problems.
 
-## ✨ Features
-- **📸 Camera & Gallery Scan:** Instantly capture or upload math problems using our built-in image cropper for perfect framing.
-- **🧠 AI-Powered Solving:** Leverages on-device AI engines to give you step-by-step solutions to complex math problems.
-- **⚡ Fast & Secure:** The app focuses heavily on privacy. Your images are processed securely, and data is kept local wherever possible.
-- **🌙 Modern UI:** Fully edge-to-edge Material You design, with day/night mode support, smooth animations, and premium glassmorphism layouts.
+## Features
+- **Camera & Gallery Scan:** Instantly capture or upload math problems using our built-in image cropper for perfect framing.
+- **AI-Powered Solving:** Leverages on-device AI engines to give you step-by-step solutions to complex math problems.
+- **Fast & Secure:** The app focuses heavily on privacy. Your images are processed securely, and data is kept local wherever possible.
+- **Modern UI:** Fully edge-to-edge Material You design, with day/night mode support, smooth animations, and premium glassmorphism layouts.
 
-## 📱 Screenshots
+## Screenshots
 
 | Main Screen | Home Screen | Solution Screen |
 |:---:|:---:|:---:|
@@ -18,7 +18,7 @@ Solvly is an intelligent, offline-capable AI Math Assistant built for Android th
 |:---:|:---:|:---:|
 | <img src="screenshots/4.%20History%20Screen.png" width="250"> | <img src="screenshots/5.%20Setting%20Screen.png" width="250"> | <img src="screenshots/6.%20General%20Setting%20Screen.png" width="250"> |
 
-## 💡 How It Works (Example)
+## How It Works (Example)
 1. **Scan:** Open Solvly and tap the Camera icon. Point it at a handwritten or printed math problem, for example: `2x + 4 = 10`.
 2. **Crop:** The app will highlight the text. Crop perfectly around the equation.
 3. **Solve:** Solvly's AI instantly processes the text, understands the algebra, and provides a step-by-step solution:
@@ -26,20 +26,10 @@ Solvly is an intelligent, offline-capable AI Math Assistant built for Android th
    - *Step 2:* `2x = 6`
    - *Step 3:* `x = 3`
 
-## 🛠️ Tech Stack
+## Tech Stack
 - **Language:** Java / Android SDK
 - **Architecture:** MVVM-inspired (Clean Architecture)
 - **UI:** XML Layouts, Material Design 3, Edge-to-Edge window insets
-- **Libraries:**
-  - Google ML Kit (Text Recognition)
-  - CanHub Android Image Cropper
-  - AndroidX / Jetpack libraries
-
-## 🚀 How to Run Locally
-1. Clone this repository: `git clone https://github.com/HarshGhaskata-09/Solvly.git`
-2. Open the project in **Android Studio**.
-3. Let Gradle sync and download dependencies.
-4. Hit **Run** (`Shift + F10`) to install the app on your emulator or physical device.
 
 ---
 *Built with ❤️ for math lovers and students.*
