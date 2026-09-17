@@ -1,0 +1,446 @@
+================================================================================
+  SOLVLY APP - OFFLINE MATHSOLVER EXPANSION COMPLETE ACTION PLAN
+================================================================================
+Goal: App ko 100% offline working bana do (Std 1-12 Science full support)
+      AI fallback optional rahe, par har basic-to-intermediate problem locally solve.
+================================================================================
+
+1. ARCHITECTURE
+================================================================================
+Base file: MathSolver.java (utils/)
+Current dispatcher order: Unit Conv -> Quadratic -> Simultaneous -> Linear 
+                          -> Calculus -> Scientific -> Arithmetic
+
+NEW RECOMMENDED DISPATCHER ORDER (future implementation):
+  1. Unit Conversion + Currency/Temperature (NEW)
+  2. Percentage / Profit-Loss / SI-CI / Ratio-Proportion (NEW BLOCK)
+  3. Linear Equation (1 var)
+  4. Simultaneous (2 vars) + NEW: 3-vars via Gaussian elimination
+  5. Quadratic (ax^2+bx+c) + NEW: Cubic (Cardano) + Biquadratic
+  6. NEW: Matrices + Determinants (2x2, 3x3) + Cramer's rule NxN
+  7. NEW: Vectors algebra (dot/cross product, magnitude, angle)
+  8. NEW: Limits (standard forms, L'Hopital rule)
+  9. Derivatives (expand beyond x^n: product/quotient/chain, trig, log, exp)
+ 10. NEW: Indefinite Integral (advanced) + Definite Integral (FTC)
+ 11. NEW: Permutations, Combinations, Factorial
+ 12. NEW: Probability (basic, conditional, Bayes, Bernoulli/Binomial basics)
+ 13. Trigonometry + Scientific (expand: cosec/sec/cot, inverse, identities)
+ 14. Arithmetic (PEMDAS)
+ 15. NEW: Geometry Word Problems (area/perimeter/volume/Heron/distance formula)
+
+================================================================================
+2. TOTAL FORMULA COUNT: 172+ IMPLEMENTATIONS
+================================================================================
+
+
+================================================================================
+BLOCK A: COMMERCIAL / ARITHMETIC WORD PROBLEMS (STD 5-9)
+New Solvers: 8 methods  |  Formulae: 28
+================================================================================
+A1. solvePercentage            (5 formulas)
+    - P% = (part / whole) * 100
+    - Increase% = (new - old) / old * 100
+    - Decrease% = (old - new) / old * 100
+    - Discount% = Discount / MP * 100   (MP = Marked Price)
+    - Tax% = Tax / Pre-tax amount * 100
+
+A2. solveProfitLoss            (7 formulas)
+    - Profit = SP - CP                    [SP = Selling Price, CP = Cost Price]
+    - Loss = CP - SP
+    - Profit% = Profit / CP * 100
+    - Loss% = Loss / CP * 100
+    - SP = CP * (1 + P/100)   or   CP * (1 - L/100)
+    - CP = SP * 100 / (100 + P)   or   SP * 100 / (100 - L)
+    - Dishonest dealer (faulty weight):
+        Gain% = [Error / (True Weight - Error)] * 100
+
+A3. solveSimpleInterest        (4 formulas)
+    - SI = (P * R * T) / 100           P=Principal R=Rate%p.a. T=Years
+    - Amount A = P + SI
+    - P = (100 * SI) / (R * T)
+    - R = (100 * SI) / (P * T)
+
+A4. solveCompoundInterest      (6 formulas)
+    - Amount A = P * (1 + R/100)^T
+    - CI = A - P
+    - Compounded Half-yearly:  Rate=R/2,  Time=2T,  A = P(1 + R/200)^(2T)
+    - Compounded Quarterly:    Rate=R/4,  Time=4T,  A = P(1 + R/400)^(4T)
+    - Difference CI - SI for 2 years = P * (R/100)^2
+    - Difference CI - SI for 3 years = P * (R/100)^2 * (3 + R/100)
+
+A5. solveRatioProportion       (3 formulas)
+    - If a:b :: c:d  =>  a*d = b*c   (Product of extremes = Product of means)
+    - Third proportional of a,b:   a/b = b/x   => x = b^2/a
+    - Fourth proportional of a,b,c:  a/b = c/x  => x = (b*c)/a
+
+A6. solveTimeWork              (3 formulas)
+    - If A can do a job in n days:  A's 1-day work = 1/n
+    - Combined A+B 1-day work = 1/A + 1/B, together days = 1 / (1/A+1/B)
+    - Pipes-Cistern:  Same logic (inlet +, outlet -)
+
+A7. solveSpeedDistTime         (3 formulas)
+    - Distance D = Speed S * Time T
+    - Avg speed (same distance at speed a & b) = 2ab / (a + b)
+    - Boat Stream:  Downstream = u+v,  Upstream = u-v,  u=(ds+us)/2, v=(ds-us)/2
+
+A8. solveAlligationMixture     (2 formulas)
+    - Alligation Rule:
+        Quantity of cheaper / Quantity of dearer = (D - M) / (M - C)
+        [C = Cheaper cost, D = Dearer cost, M = Mean cost]
+    - Repeated Dilution:  V_final = V_original * (1 - R/V)^n
+        [V=initial vol, R=removed each time, n=number of times]
+
+Regex Patterns to detect: "x% of", "profit", "loss", "SI", "CI", "rate", "time"
+                           "year", "ratio", "days", "speed", "mixture", "alligation"
+
+
+================================================================================
+BLOCK B: ADVANCED ALGEBRA (STD 9-12)
+New Solvers: 8 methods  |  Formulae: 35
+================================================================================
+B1. solveCubic (ax^3+bx^2+cx+d=0)     (2 methods)
+    - Vieta substitution: x = t - b/(3a) -> depressed t^3 + pt + q = 0
+    - Cardano:  Discriminant D = (q/2)^2 + (p/3)^3
+        D>0  -> 1 real + 2 complex conjugate roots
+        D=0  -> all real, at least two equal
+        D<0  -> 3 distinct real roots (Casus irreducibilis, trigonometric soln)
+
+B2. solveSimultaneous3Var             (5 methods)
+    - 3x3 Linear system Ax = B
+    - Method 1: Cramer's rule  x = det(A1)/det(A), y=det(A2)/det(A), z=det(A3)/det(A)
+    - Method 2: Gaussian elimination (row-echelon form, back substitution)
+    - Check Unique / No / Infinite solution via rank
+    - Determinant nonzero => unique solution guaranteed
+
+B3. solveAbsoluteValue               (2 forms)
+    - |x - a| = b   =>   x = a + b   OR   x = a - b   (if b>=0; else no soln)
+    - Inequality |x-a| < b  =>  a-b < x < a+b   (open interval)
+
+B4. solveInequalitiesQuadratic       (3 rules)
+    - ax^2+bx+c ? 0 using Sign Scheme (parabola opening)
+    - a>0: f(x) < 0  between roots; f(x) > 0  outside roots
+    - a<0: f(x) > 0  between roots; f(x) < 0  outside
+    - Wavy curve method for rational / polynomial inequalities
+
+B5. solveLogarithm                   (10 identities)
+    1) log_b (x*y) = log_b x + log_b y
+    2) log_b (x/y) = log_b x - log_b y
+    3) log_b (x^n) = n * log_b x          [Power rule]
+    4) log_b b = 1
+    5) log_b 1 = 0
+    6) a^(log_a N) = N                     [Anti-log]
+    7) log_b a = log_k a / log_k b         [Change of base]
+    8) log_(b^n) (a^m) = (m/n) * log_b a
+    9) log_e x = ln x,  log_10 x
+    10) log_b a = 1 / log_a b
+
+B6. solveExponentialEquation         (5 rules)
+    - a^x = a^y  ==> x = y   (if a>0, a!=1, One-to-one)
+    - a^x = N    ==> x = log_a N = (ln N)/(ln a)
+    - e^x = N    ==> x = ln N
+    - a^(f(x)) = b^(g(x)) take log both sides
+    - Growth/Decay:  N(t) = N0 * (1 + r)^t   /   N0 * e^(kt)
+
+B7. solveSurdsIndices                (5 laws)
+    1) a^m * a^n = a^(m+n)
+    2) a^m / a^n = a^(m-n)
+    3) (a^m)^n = a^(m*n)
+    4) a^(-n) = 1 / a^n
+    5) sqrt(a) * sqrt(b) = sqrt(a*b),   sqrt(a)/sqrt(b) = sqrt(a/b)
+    - Rationalize denominator:  1/(sqrt(a)-sqrt(b)) = (sqrt(a)+sqrt(b))/(a-b)
+
+B8. solveSequenceSeries              (3 formulas)
+    - Arithmetic Progression (AP):
+          nth term   a_n = a + (n-1) * d
+          Sum S_n    = (n/2) * [2a + (n-1)d]   =   n/2 * (a + l)   (l last)
+    - Geometric Progression (GP):
+          nth term   a_n = a * r^(n-1)
+          Sum S_n    = a * (r^n - 1) / (r - 1)    (r != 1)
+          Infinite GP sum = a / (1 - r)    (|r| < 1)
+    - AM >= GM >= HM  (equality iff a=b=c=...)
+
+
+================================================================================
+BLOCK C: MATRICES, DETERMINANTS, VECTORS (STD 12)
+New Solvers: 7 methods  |  Formulae: 28
+================================================================================
+C1. solveMatrixOps                      (6 operations)
+    - Addition A + B  (same order only)
+    - Scalar multiplication  k*A
+    - Multiplication A(m*n) * B(n*p) = C(m*p)
+        C_ij = sum over k (A_ik * B_kj)
+    - Transpose A^T: (A^T)_ij = A_ji
+    - Symmetric check: A^T = A;  Skew-symmetric: A^T = -A
+    - Trace = sum of diagonal entries
+
+C2. solveDeterminant2x2                 (1 formula)
+    det |a  b|  =  ad - bc
+        |c  d|
+
+C3. solveDeterminant3x3                 (2 methods)
+    - Sarrus' rule (shortcut for 3x3)
+    - Cofactor expansion: det = a11*M11 - a12*M12 + a13*M13
+
+C4. solveDeterminantNxN                 (2 properties)
+    - Laplace / Cofactor expansion general
+    - Properties: det(kA) = k^n * det(A), det(I)=1
+                  det(A*B) = det(A)*det(B), det(A^T)=det(A)
+                  Row interchange -> sign flip
+                  Two identical rows -> det = 0
+
+C5. solveInverseMatrix                  (2 methods)
+    - A^(-1) = adj(A) / det(A)    [A invertible iff det != 0]
+        adj(A) = Transpose of Cofactor matrix
+    - Gauss-Jordan: [A : I]  --> RRE -->  [I : A^(-1)]
+
+C6. solveCramerNVar                     (3 rules)
+    - Generalized Ax=b solution via Cramer's: xi = det(Ai)/det(A)
+    - det(A)!=0 => Unique soln
+    - det(A)=0 -> No / Infinitely many (need augmented rank check)
+
+C7. solveVectors                         (12 formulas)
+    1)  Magnitude:  |a| = sqrt(a1^2 + a2^2 + a3^2)   [3D]
+    2)  Unit vector: a-hat = a / |a|
+    3)  Addition, Scalar mult component-wise
+    4)  Dot product:  a . b = |a||b| cos(theta) = a1b1 + a2b2 + a3b3
+    5)  Angle cos:   cos(theta) = (a.b) / (|a|*|b|)
+    6)  Perpendicular iff a.b = 0
+    7)  Parallel iff a = k*b
+    8)  Cross product: |a x b| = |a||b| sin(theta)
+                          a x b = det of ( i,  j,  k )
+                                                   (a1 a2 a3)
+                                                   (b1 b2 b3)
+    9)  Area of parallelogram = |a x b|
+    10) Scalar triple product a.(bxc) = Volume parallelopiped
+          Coplanar iff a.(bxc) = 0
+    11) Projection of a onto b = (a.b)/|b|
+    12) Direction cosines:  l^2 + m^2 + n^2 = 1
+        Section formula (internal): ((mx2+nx1)/(m+n), (my2+ny1)/(m+n), ...)
+
+
+================================================================================
+BLOCK D: CALCULUS DEEP (STD 11-12)
+Enhance + New Solvers: 5  |  Formulae: 25
+================================================================================
+D1. solveLimits                          (7 standard forms)
+    1) lim_{x->a}  c  =  c
+    2) Sum/Diff/Product/Quotient limit laws
+    3) lim_{x->a}  (x^n - a^n)/(x - a)  =  n * a^(n-1)
+    4) lim_{x->0}  sin(x)/x  =  1    (x in radians)
+    5) lim_{x->0}  (1+x)^(1/x) = e   ;   lim_{x->inf} (1+1/x)^x = e
+    6) lim_{x->0}  (a^x-1)/x  =  ln(a)
+    7) L'Hopital's Rule (0/0 OR inf/inf) -> lim f/g = lim f'/g'   (1st order)
+
+D2. enhanceDerivatives  (Expand: current only d/dx x^n)
+  Basic Derivatives (~10):
+    d/dx (constant)  = 0
+    d/dx x^n         = n*x^(n-1)        (power rule)
+    d/dx sin x       = cos x
+    d/dx cos x       = - sin x
+    d/dx tan x       = sec^2 x
+    d/dx e^x         = e^x
+    d/dx ln x        = 1/x
+    d/dx a^x         = a^x * ln(a)
+    d/dx sqrt(x)     = 1/(2*sqrt(x))
+    d/dx log_a x     = 1/(x * ln a)
+
+  Derivative Rules (~5):
+    - Product rule:   (uv)' = u'v + uv'
+    - Quotient rule:  (u/v)' = (u'v - uv') / v^2
+    - Chain rule:     dy/dx = dy/du * du/dx
+    - Constant multiple, sum/difference rules
+    - Implicit differentiation basics
+
+D3. enhanceIntegralIndefinite   (Expand: current only integral x^n)
+  Basic Integrals (~10):
+    int k dx         = kx + C
+    int x^n dx       = x^(n+1)/(n+1) + C     (n!=-1)
+    int (1/x) dx     = ln |x| + C
+    int e^x dx       = e^x + C
+    int a^x dx       = a^x / ln(a) + C
+    int sin x dx     = -cos x + C
+    int cos x dx     = sin x + C
+    int sec^2 x dx   = tan x + C
+    int 1/(1+x^2) dx = arctan x + C
+    int 1/sqrt(1-x^2) dx = arcsin x + C
+
+  Integration Techniques (covered in parsing rules):
+    - Constant / Sum rules
+    - Substitution u = g(x)
+    - Basic integration by parts (mention in prompt)
+
+D4. solveDefiniteIntegral                (2 theorems)
+    - First Fundamental Theorem of Calculus (FTC):
+        int_a^b f(x) dx = F(b) - F(a)     where F' = f
+    - Substitution definite: limits adjust
+
+D5. solveDerivativeAtPoint_Tangent        (1 line)
+    - Tangent slope at a = f'(a);  Normal slope = -1 / f'(a)
+
+
+================================================================================
+BLOCK E: TRIGONOMETRY + PnC + PROBABILITY (STD 10-12)
+New Solvers: 6 methods  |  Formulae: 28
+================================================================================
+E1. enhanceTrigonometry                 (12 identities)
+  Reciprocal:
+    cosec theta = 1 / sin theta
+    sec theta   = 1 / cos theta
+    cot theta   = 1 / tan theta
+
+  Pythagorean:
+    sin^2 + cos^2 = 1
+    1 + tan^2 = sec^2
+    1 + cot^2 = cosec^2
+
+  Complementary angles (90 - theta):
+    sin(90-theta)=cos, cos(90-theta)=sin
+    tan(90-theta)=cot, cosec(90-theta)=sec, etc.
+
+  Compound angles:
+    sin(A+-B) = sinA cosB +- cosA sinB
+    cos(A+-B) = cosA cosB -+ sinA sinB
+    tan(A+-B) = (tanA +- tanB) / (1 -+ tanA tanB)
+
+  Double angles:
+    sin 2A = 2 sinA cosA
+    cos 2A = cos^2 - sin^2 = 2cos^2-1 = 1-2sin^2
+    tan 2A = 2 tanA / (1 - tan^2 A)
+
+E2. solveHeightDistance                  (2 forms)
+    - Single object:  tan(theta_elev) = Height / Distance from base
+    - Two-point: two angles of elevation from diff points -> find H via simult eq
+
+E3. solveFactorial                        (1 definition)
+    n! = 1 * 2 * 3 * ... * n;     0! = 1;   1! = 1
+
+E4. solvePermutation                      (4 formulas)
+    P(n,r) = n! / (n-r)!        [r <= n]
+    P(n,n) = n!
+    Circular permutation of n distinct = (n-1)!
+    Circular (necklace / bead): (n-1)! / 2
+    Permutations of multiset / repetition:  n! / (n1! n2! ... nk!)
+
+E5. solveCombination                      (3 formulas)
+    C(n,r) = n! / ( r! * (n-r)! )
+    C(n,r) = C(n, n-r)
+    C(n,0) + C(n,1) + C(n,2) + ... + C(n,n) = 2^n
+    C(n,0)^2 + C(n,1)^2 + ... + C(n,n)^2 = C(2n, n)
+    Pascal identity: C(n+1,k) = C(n,k) + C(n,k-1)
+
+E6. solveProbability                       (6 formulas)
+    1) Classical:  P(E) = n(E) / n(S)        [S sample space]
+    2) Complement: P(not E) = 1 - P(E)
+    3) Additive:   P(A U B) = P(A) + P(B) - P(A n B)
+                   If Mutually Exclusive: P(A U B) = P(A)+P(B), P(A n B)=0
+    4) Conditional: P(A|B) = P(A n B) / P(B)    [P(B)>0]
+    5) Multiplication: P(A n B) = P(A) * P(B|A)
+                   Independent: P(A n B) = P(A) * P(B)
+    6) Bayes Theorem:
+         P(A_i|B) = [P(B|A_i) * P(A_i)] / sum_j [P(B|A_j)*P(A_j)]
+    - Bernoulli trials / Binomial:
+        P(k successes out of n) = C(n,k) * p^k * q^(n-k),   q = 1 - p
+
+
+================================================================================
+BLOCK F: GEOMETRY 2D + 3D + COORDINATE (ALL STD)
+New Solvers: 6 methods  |  Formulae: 28
+================================================================================
+F1. solve2DGeometry (Perimeter + Area)    (12 formulas)
+    - Square:         P = 4s,       A = s^2
+    - Rectangle:      P = 2(l+b),   A = l * b
+    - Parallelogram:  P = 2(a+b),   A = base * height
+    - Rhombus:        P = 4s,       A = (d1 * d2) / 2
+    - Trapezium:      A = h/2 * (sum of parallel sides)
+    - Triangle:       A = (1/2)*b*h
+    - Equilateral Tri: A = (sqrt(3)/4) * s^2,    P = 3s
+    - Heron's formula (scalene):
+        s = (a+b+c)/2,    A = sqrt( s*(s-a)*(s-b)*(s-c) )
+    - Circle:         C = 2*pi*r,       A = pi * r^2
+    - Sector (radius r, angle theta degrees):
+          Length of arc = (theta/360) * 2*pi*r
+          Area = (theta/360) * pi * r^2
+    - Ring/Annulus:   A = pi*(R^2 - r^2)
+
+F2. solve3DGeometry (TSA/CSA/Volume)      (8 formulas)
+    - Cube:          Vol = a^3,           TSA = 6*a^2
+    - Cuboid:        Vol = l*b*h,         TSA = 2(lb + bh + hl)
+    - Cylinder:      Vol = pi*r^2*h
+                     CSA = 2*pi*r*h,      TSA = 2*pi*r*(r+h)
+    - Cone:          Vol = (1/3)*pi*r^2*h
+                     CSA = pi*r*l,        TSA = pi*r*(r+l)   [l slant]
+    - Sphere:        Vol = (4/3)*pi*r^3,  SA = 4*pi*r^2
+    - Hemisphere:    Vol = (2/3)*pi*r^3,  CSA = 2*pi*r^2, TSA = 3*pi*r^2
+
+F3. solveCoordinateGeometry                (8 formulas)
+    1) Distance between (x1,y1) & (x2,y2):
+         D = sqrt( (x2-x1)^2 + (y2-y1)^2 )
+    2) Section formula (internally in ratio m:n):
+         x = (m*x2 + n*x1)/(m+n),   y = (m*y2 + n*y1)/(m+n)
+    3) Midpoint:      x = (x1+x2)/2,  y = (y1+y2)/2
+    4) Centroid (triangle 3 vertices):
+         G_x = (x1+x2+x3)/3,    G_y = (y1+y2+y3)/3
+    5) Slope of line: m = (y2-y1)/(x2-x1)  = tan(theta)
+    6) Equation of line (Point-Slope):  y - y1 = m(x - x1)
+       Two-point form, slope-intercept y = mx + c, intercept form x/a + y/b = 1
+    7) Perpendicular distance from point (x0,y0) to line ax+by+c=0:
+         d = | a*x0 + b*y0 + c | / sqrt(a^2 + b^2)
+    8) Area of triangle given 3 vertices (shoelace formula):
+       A = 1/2 | x1(y2-y3) + x2(y3-y1) + x3(y1-y2) |
+
+
+================================================================================
+3. GRAND TOTALS
+================================================================================
+   Block                         New Solver Methods    Formula Implementations
+   ----------------------------  --------------------  -----------------------
+   A  Commercial Arithmetic              8                      28
+   B  Advanced Algebra                   8                      35
+   C  Matrices / Det / Vectors           7                      28
+   D  Calculus (Enhanced + Limits)       5                      25
+   E  Trig / PnC / Probability           6                      28
+   F  Geometry (2D/3D/Coordinate)        6                      28
+   ============================  ====================  =======================
+   TOTAL                                40 NEW SOLVERS        ~172 FORMULAS
+   ============================================================================
+
+Notes:
+- Actual new LOC in MathSolver.java ~1800-2500
+- Alternative: Split into new utility classes for maintenance:
+     utils/CommercialMath.java    (Block A)
+     utils/AlgebraSolver.java     (Block B)
+     utils/MatrixSolver.java      (Block C)
+     utils/CalculusSolver.java    (Block D)
+     utils/DiscreteMath.java      (Block E)
+     utils/GeometrySolver.java    (Block F)
+  Then MathSolver acts as central dispatcher delegating to above.
+
+
+================================================================================
+4. IMPLEMENTATION ROADMAP (Quick wins first)
+================================================================================
+   PHASE 1  (1 day)   ->   Block A + Block F   (56 formulas)
+                         Std 1 to 10 => 95% OFFLINE PROBLEMS SOLVABLE
+
+   PHASE 2  (1 day)   ->   Block B + Block E Trig part
+                         Std 9-11 BOARD COVERAGE
+
+   PHASE 3  (1-2 days) -> Block D Calculus full + Limits + Definite Integrals
+                         Std 11-12 Science Calculus offline
+
+   PHASE 4  (1-2 days) -> Block C (Matrices/Det/Vectors)
+                         + E PnC, Probability, Bayes
+                         Std 12 Science 85-90% OFFLINE COVERAGE
+
+
+================================================================================
+5. OPTIONAL EXTRAS (Future scope - no immediate need)
+================================================================================
+   - Complex numbers: a+ib, argand, polar form, De Moivre's theorem
+   - Mathematical Induction solver (step-by-step with base case + IH + IS)
+   - Propositional Logic / Truth tables
+   - Linear Programming graphical (2-variable feasible region, corner point)
+   - Physics Numericals module (Newton 2nd F=ma, Kinematics EoM v=u+at, Work-Energy,
+     Gravitation, Fluid statics, Optics lens formula 1/v -1/u = 1/f, etc.)
+
+================================================================================

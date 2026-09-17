@@ -1,0 +1,823 @@
+================================================================================
+                SOLVLY APP - COMPREHENSIVE DETAILED PROJECT REPORT
+================================================================================
+Generated on: 2026-08-21
+Project Name: Solvly
+Project Type: Android Application (Java + XML)
+Package Name: com.example.solvly
+Version Code: 1
+Version Name: 1.0
+Application ID: com.example.solvly
+Min SDK: 23 (Android 6.0 Marshmallow)
+Target SDK: 36 (Android 16+)
+Compile SDK: 36
+Java Version: 11
+================================================================================
+
+TABLE OF CONTENTS
+================================================================================
+1. PROJECT OVERVIEW
+2. PROJECT DIRECTORY STRUCTURE
+3. GRADLE & BUILD CONFIGURATION
+   3.1 Root-level (settings.gradle, build.gradle, gradle.properties)
+   3.2 App-level (app/build.gradle)
+   3.3 Version Catalog (gradle/libs.versions.toml)
+   3.4 Dependencies List
+   3.5 Permissions & Features (AndroidManifest.xml)
+4. ACTIVITIES (SCREENS) - DETAILED ANALYSIS
+   4.1 IntroActivity (Onboarding/Launcher Activity)
+   4.2 MainActivity (Home Screen)
+   4.3 ResultActivity (Solution Display)
+   4.4 HistoryActivity (Problem History)
+   4.5 SettingsActivity (Main Settings)
+   4.6 GeneralSettingsActivity (General Settings Detail)
+   4.7 SecuritySettingsActivity (Security Settings Detail)
+   4.8 PolicyActivity (Privacy Policy)
+   4.9 LicenceActivity (License Information)
+   4.10 AboutActivity (About App Info)
+5. UTILITY CLASSES - DETAILED ANALYSIS
+   5.1 SolvlyApp (Application Class)
+   5.2 AISolver (AI-based Solver via Gemini API)
+   5.3 MathSolver (Offline Local Math Engine)
+   5.4 CustomMathView (Custom WebView-based Math Text Display)
+   5.5 HistoryDbHelper (SQLite Database)
+   5.6 NotificationHelper & NotificationReceiver
+   5.7 BootReceiver (Boot-time Notification Restorer)
+6. RESOURCES - DETAILED ANALYSIS
+   6.1 Layout Files (XML) (24 layouts)
+   6.2 Drawable Resources (49 XML drawables)
+   6.3 Color Resources (Light + Night themes)
+   6.4 String Resources
+   6.5 Theme Resources (Material 3)
+   6.6 Mipmap Launcher Icons
+   6.7 XML Config Files (Backup, FileProvider)
+7. APPLICATION FLOW & USER JOURNEY
+8. DATA STORAGE & PERSISTENCE (SharedPreferences & SQLite)
+9. AI / OCR PIPELINE
+10. FEATURE SUMMARY
+11. KNOWN OBSERVATIONS & SUGGESTIONS
+================================================================================
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+Solvly is an advanced mathematical problem-solving Android application designed 
+for students, teachers, and lifelong learners. It provides instant, 
+step-by-step solutions to mathematical problems. The app supports three input 
+modes:
+
+    • Text Input (Typed Math)
+    • Camera Capture
+    • Gallery Image Selection
+
+Key Features Include:
+
+    • AI-powered solver using Google Gemini 2.0 Flash (via direct REST API)
+    • Offline local math solver engine (for basic to intermediate problems)
+    • OCR text recognition (Google ML Kit Text Recognition)
+    • Image cropping before processing
+    • Problem history with date headers, auto-delete options)
+    • History search filtering, copy, share)
+    • Theme support (System default / Light / Dark)
+    • Notification reminders & Notifications)
+    • Bug reporting with image attachments)
+    • Cache management)
+    • Privacy Policy, License & About screens)
+    • Data encryption info screen
+================================================================================
+
+2. PROJECT DIRECTORY STRUCTURE
+================================================================================
+
+d:\Solvly/
+├── .gradle/                                   (Build output cache folders for Gradle 8.13)
+├── .idea/                                     (IDE configuration)
+├── .vscode/                                    (VS Code)
+├── app/                                       (Main App Module
+│   ├── build/                                 (Generated build outputs)
+│   │   └── outputs/apk/debug/                     (Compiled APK output)
+│   │       ├── Solvly.apk
+│   │       └── output-metadata.json
+│   └── src/
+│       ├── androidTest/                    (Instrumented Tests)
+│       │   └── java/.../ExampleInstrumentedTest.java
+│       ├── main/
+│       │   ├── java/com/example/solvly/
+│       │   │   ├── SolvlyApp.java
+│       │   │   ├── activities/                (10 Java Activity Classes)
+│       │   │   │   ├── IntroActivity.java
+│       │   │   │   ├── MainActivity.java
+│       │   │   │   ├── ResultActivity.java
+│       │   │   │   ├── HistoryActivity.java
+│       │   │   │   ├── SettingsActivity.java
+│       │   │   │   ├── GeneralSettingsActivity.java
+│       │   │   │   ├── SecuritySettingsActivity.java
+│       │   │   │   ├── AboutActivity.java
+│       │   │   │   ├── PolicyActivity.java
+│       │   │   │   └── LicenceActivity.java
+│       │   │   └── utils/                     (7 Java Utility Classes)
+│       │   │       ├── AISolver.java
+│       │   │       ├── MathSolver.java
+│       │   │       ├── CustomMathView.java
+│       │   │       ├── HistoryDbHelper.java
+│       │   │       ├── NotificationHelper.java
+│       │   │       ├── NotificationReceiver.java
+│       │   │       └── BootReceiver.java
+│       │   ├── res/
+│       │   │   ├── drawable/                  (49 XML drawable files)
+│       │   │   ├── drawable-v24/              (ic_launcher_foreground.xml)
+│       │   │   ├── layout/                    (24 XML layout files)
+│       │   │   ├── mipmap-hdpi/mdpi/mipmap-mdpi/mipmap-xhdpi/xxhdpi/xxxhdpi/ (Launcher webp icons)
+│       │   │   ├── mipmap-anydpi-v26/        (Adaptive launcher XML icons)
+│       │   │   ├── values/                  (colors, strings, themes.xml)
+│       │   │   ├── values-night/            (Dark-mode colors & themes)
+│       │   │   └── xml/                     (3 XML config files)
+│       │   └── AndroidManifest.xml
+│       └── test/                             (Unit Tests)
+│           └── java/.../ExampleUnitTest.java
+├── gradle/
+│   ├── libs.versions.toml                 (Version Catalog)
+│   └── wrapper/
+├── .gitignore
+├── build.gradle (root)
+├── gradle.properties
+├── gradlew / gradlew.bat
+├── local.properties                          (SDK path & API keys)
+└── settings.gradle
+├── build/
+│   └── reports/
+================================================================================
+
+3. GRADLE & BUILD CONFIGURATION
+================================================================================
+
+3.1 settings.gradle (d:\Solvly\settings.gradle
+────────────────────────────────────────────────────────────────────────────────
+• Project root name: "Solvly"
+• Included modules: only one module: :app
+• Plugin repositories: Google, Maven Central, Gradle Plugin Portal
+• Dependency repositories: Google, Maven Central, JitPack (for CanHub Android-Image-Cropper)
+• Repositories Mode: FAIL_ON_PROJECT_REPOS (enforced)
+
+3.2 Root build.gradle (d:\Solvly\build.gradle)
+────────────────────────────────────────────────────────────────────────────────
+• Plugin: Android Application plugin alias to all sub-projects/modules.
+
+3.3 gradle.properties (d:\Solvly\gradle.properties
+────────────────────────────────────────────────────────────────────────────────
+• JVM args: 2GB (-Xmx2048m
+• AndroidX enabled true
+• Android R class non-transitive true: true
+• UTF-8 encoding enabled
+
+3.4 Version Catalog (d:\Solvly\gradle\libs.versions.toml
+────────────────────────────────────────────────────────────────────────────────
+Versions:
+  • AGP (Android Gradle Plugin): 8.13.2
+  • JUnit: 4.13.2
+  • AndroidX JUnit Ext: 1.3.0
+  • Espresso Core: 3.7.0
+  • AppCompat: 1.7.1
+  • Material Components: 1.13.0
+  • AndroidX Activity: 1.13.0
+  • ConstraintLayout: 2.2.1
+  • ML Kit Text Recognition: 19.0.1
+  • Android Image Cropper (CanHub): 4.5.0
+  • (Unused in build.gradle but present in TOML generativeai: 0.9.0, guava:32.1.3-android)
+
+Plugins:
+  • android-application: com.android.application v8.13.2
+
+3.5 App-level build.gradle (d:\Solvly\app\build.gradle)
+────────────────────────────────────────────────────────────────────────────────
+• Namespace: com.example.solvly
+• DefaultConfig:
+  • applicationId: com.example.solvly
+  • minSdk: 23
+  • targetSdk: 36
+  • versionCode: 1
+  • versionName: 1.0
+  • BuildConfig Field: GEMINI_API_KEYS (from local.properties
+• BuildTypes Release:
+  • minifyEnabled true (R8/ProGuard)
+  • shrinkResources true
+  • ProGuard files: default + proguard-rules.pro)
+• Java CompileOptions: Java 11 compatibility
+• buildFeatures: buildConfig true
+
+DEPENDENCIES (Implementation):
+  • androidx.appcompat:appcompat 1.7.1
+  • com.google.android.material:material 1.13.0
+  • androidx.activity:activity 1.13.0
+  • androidx.constraintlayout:constraintlayout 2.2.1
+  • com.google.android.gms:play-services-mlkit-text-recognition 19.0.1
+  • com.github.CanHub:Android-Image-Cropper 4.5.0
+  (Note: google generativeai SDK was REMOVED due to Java compatibility issues; app uses direct REST HTTP calls to Gemini instead.)
+
+Test Dependencies:
+  • junit:junit 4.13.2 (testImplementation)
+  • androidx.test.ext:junit 1.3.0 + androidx.test.espresso:espresso-core 3.7.0
+
+LOCAL.PERMISSIONS (from AndroidManifest.xml d:\Solvly\app\src\main\AndroidManifest.xml
+────────────────────────────────────────────────────────────────────────────────
+Dangerous Permissions (requested Runtime Permissions):
+  • android.permission.CAMERA → For capturing photos of problems)
+  • android.permission.READ_EXTERNAL_STORAGE (maxSdkVersion=32 → legacy storage access)
+  • android.permission.READ_MEDIA_IMAGES (Android 13+ image picker)
+  • android.permission.POST_NOTIFICATIONS → send notifications)
+
+Normal Permissions (auto granted):
+  • android.permission.INTERNET (call AI solver)
+  • android.permission.RECEIVE_BOOT_COMPLETED → to reschedule notifications after reboot)
+
+Hardware Features (optional):
+  • android.hardware.camera (not required; app degrades gracefully on devices)
+
+QUERIES (for email & share intents):
+  • SENDTO (mailto: scheme → email apps)
+  • ACTION_SEND */* → share)
+  • ACTION_SEND_MULTIPLE */* → share multiple attachments)
+
+================================================================================
+4. ACTIVITIES - DETAILED ANALYSIS
+================================================================================
+
+4.1 IntroActivity  (d:\Solvly\app\src\main\java\com\example\solvly\activities\IntroActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Type: LAUNCHER Activity (Main + Category.LAUNCHER)
+Layout: activity_intro.xml
+Purpose: First-time onboarding and privacy policy acceptance screen.
+Key Flow:
+    • Opens app → Check if KEY_POLICY_ACCEPTED=true in solvly_prefs?
+      ├─ YES → Go straight to MainActivity
+      └─ NO → Show policy acceptance screen UI
+UI:
+  • App Icon/logo
+  • Checkbox "I have read and agree to the Privacy Policy (with Spannable clickable "Privacy Policy" → opens PolicyActivity)
+  • Continue Button disabled until checkbox is checked
+Features:
+  • Entrance animations: content slides up with DecelerateInterpolator)
+  • Fade-out when then navigate away on Continue)
+  • FLAG_ACTIVITY_NEW_TASK|CLEAR_TASK so user cannot go back
+SharedPrefs Keys used:
+  • PREFS_NAME = "solvly_prefs"
+  • KEY_POLICY_ACCEPTED = "policy_accepted" (boolean)
+────────────────────────────────────────────────────────────────────────────────
+
+4.2 MainActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\MainActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Type: Home screen. Main home screen (exported=false)
+Layout: activity_main.xml
+Soft Input Mode (Portrait only (no forced orientation; default)
+windowSoftInputMode: adjustResize)
+Purpose: Central hub where user enters/inputs problem input hub for users can type the problem.
+Key Variables:
+  • MAX_IMAGES = 1 (maximum only one image at a time)
+  • selectedImages List<Uri> (attached images)
+  • cameraImageUri: temp camera capture output temp image)
+  • previewExecutor: ExecutorService fixedThreadPool(2) loads previews
+  • backPressedTime / backToast: double-back exit handler
+
+ActivityResultLaunchers registered:
+  • cropImageLauncher: CropImageContract → CanHub Cropper → add cropped image)
+  • pickImageLauncher: GetContent() → pick from gallery → start cropping)
+  • takePictureLauncher: TakePicture() → take photo via camera → cropping)
+  • requestPermissionLauncher: RequestPermission(CAMERA) → if granted open camera)
+
+Core Flow:
+  1. onCreate: Check policy accepted? If IntroActivity if not accepted, exit finish.
+  2. Image attachment, buttons:
+     • Input typing hides attachment → show Gallery button (camera buttons shown, then hides.
+  • EditText with 3000 max length limit.
+  • Preview:
+  • TextWatcher: when typing → hide camera/gallery buttons animate fade/scale buttons; shows paperclip attachment.
+  • Send button navigates to:
+     • Combine raw_text (from EditText)
+     • image_uris (ArrayList<String> from List)
+  • Max images MAX_IMAGES = 1 only one image allowed.
+
+Image Cropping:
+  • Copy to cache copyToCache first to prevent URI permission issues.
+  • Dark themed cropper:
+  • Activity title: "Crop Problem
+  • Crop shape RECTANGLE
+  • Guidelines: ON.
+
+Double Back Exit:
+  • Pressing back twice within 2 seconds exits;
+  • Toast: "Press back again to exit"
+────────────────────────────────────────────────────────────────────────────────
+4.3 ResultActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\ResultActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Layout: activity_result.xml (screenOrientation: portrait)
+Purpose: Displays the solution results from AI/local solver + OCR processing pipeline.
+
+Input from Intent Extras:
+  • raw_text String from typing)
+  • image_uris ArrayList<String> of)
+  • saved_answer / saved_steps (from history viewing)
+
+Flow:
+  • CASE A: FROM HISTORY (saved_answer+saved_steps present:
+    → Show result directly (no re-solving)
+  • CASE B: NEW SOLVE:
+      → Tasks: count=1 ONLY (image OR text OR image+text → treated as SINGLE task
+  → OCR: Google ML Kit TextRecognition Latin TextRecognizer processes image
+  → combine: image OCR text + user typed text → combined text
+  → solve:
+    Fast path: MathSolver.solve locally (text < 100 chars? local solver try solve offline if works)
+    → Else: Gemini REST API call (see AISolver.solveAsync)
+  → Display results → single (get(0) only)
+  → Auto-save history: if (auto_save_history pref is true) add to HistoryDbHelper
+  → Delete history older than auto_delete_days pref)
+
+Result Card:
+  • Problem Image: image Uri)
+  • Scanned/Problem statement
+  • Final Answer gradient card bg_result_gradient CustomMathView
+  • Steps: inflated dynamically using item_step_card.xml (CustomMathView with themed on_surface)
+  • Copy button → full solution with steps to clipboard
+  • Share button → full solution as plain text ACTION_SEND
+────────────────────────────────────────────────────────────────────────────────
+4.4 HistoryActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\HistoryActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Layout: activity_history.xml
+Purpose: Browse search, manage saved problem history.
+Features:
+  • RecyclerView + LinearLayoutManager (vertical list)
+  • TWO ViewTypes:
+    • VIEW_TYPE_HEADER = 0 date header Today/Yesterday/MMM dd, yyyy
+    • VIEW_TYPE_ITEM = 1 → History Item
+  • Search bar EditText TextWatcher filter: filter by title, problem, answer (lowercase contains)
+  • Swipe LEFT to Delete: custom ItemTouchHelper.SimpleCallback paints red roundRect bg with white DELETE text on left swipe)
+    • Shows layout_delete_item_sheet bottom sheet confirm/cancel delete
+  • Clear All button → layout_clear_history_sheet confirm/cancel)
+  • Empty state: shows empty layout when no history
+
+History Item Actions:
+  • Click → opens ResultActivity with saved answer+steps
+  • Copy button → full solution title+timestamp+problem+answer+steps
+  • Share button → same as copy, shares as text
+────────────────────────────────────────────────────────────────────────────────
+4.5 SettingsActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\SettingsActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Layout: activity_settings.xml (has many settings rows + grouped cards)
+Main Settings with sections (Sections:
+   A. GENERAL:
+      • General Settings → opens GeneralSettingsActivity
+      • Notifications SwitchCompat toggle
+      • Problem History opens History
+      • Clear Cache: shows size; click clears cache shows cache dir size (formatted
+   B. APPEARANCE:
+      • Accent Color (hidden placeholder - visibility gone)
+      • Theme opens bottom sheet theme chooser (System/Light/Dark cards + radio buttons) → saves in solvly_prefs prefs.theme AppCompatDelegate.setDefaultNightMode
+   C. ACCOUNT & WORKSPACE:
+      • Subscription (hidden placeholder - visibility gone)
+      • Workspace (hidden placeholder - visibility gone)
+      • Data Control (hidden placeholder - visibility gone)
+      • Security opens SecuritySettingsActivity)
+   D. SUPPORT & INFO:
+      • Report Bug → layout_report_bug_sheet bottom sheet
+      • Policy opens Policy)
+      • License opens License)
+      • About opens About)
+   Shows version name BuildConfig.VERSION_NAME
+NOTIFICATIONS TOGGLE:
+   On: POST_NOTIFICATIONS permission (Tiramisu+)
+   → AlarmManager 2hr+/-30min random repeating notifications via NotificationHelper.
+   → Off: cancels alarms cancels.
+
+BUG REPORT:
+   • EditText description of bug
+   • image attachments persistable Uri takePersistableUriPermission permissions up to 3 images
+   • State saved to savedInstanceState (rotation preserved images, text + sheet open)
+   • Send via buildSupportedEmailIntent (prefers Gmail/Outlook/Samsung Email; tries SEND, SEND_MULTIPLE, SENDTO)
+   • ClipData permissions for granting read access
+────────────────────────────────────────────────────────────────────────────────
+4.6 GeneralSettingsActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\GeneralSettingsActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Layout: activity_general_settings.xml
+Sections:
+  • SOLVING PREFERENCES (hidden section - visibility gone):
+    • Solution Detail
+    • Trigonometry Deg/Rad
+    • Alternative Methods
+  • APP BEHAVIOR (hidden section - visibility gone):
+    • App Language
+    • Camera Auto-Focus
+    • Haptic Feedback
+  • HISTORY & DATA (actual):
+    • Auto-Save History AlertDialog Yes/No → if No → history cleared. Prefs: SolvlyPrefs auto_save_history boolean
+    • Auto-Delete Old Data → options array 24h/15/30/60/never. Prefs: auto_delete_days int (days -1 never).
+    • Clear Cache (duplicate clearAppCache refresh.
+────────────────────────────────────────────────────────────────────────────────
+4.7 SecuritySettingsActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\SecuritySettingsActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Layout: activity_security_settings.xml
+Currently only ONE feature:
+  • Data Encryption:
+    • Subtitle: "Data stored locally on device
+    • Click → layout_security_info_sheet bottom sheet okay.
+────────────────────────────────────────────────────────────────────────────────
+4.8 PolicyActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\PolicyActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Layout: activity_policy.xml
+Displays @string/policy_text full privacy policy in scrolling TextView.
+────────────────────────────────────────────────────────────────────────────────
+4.9 LicenceActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\LicenceActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Layout: activity_licence.xml
+Displays @string/licence_text includes Open Source attributions:
+  • Android Material Components Apache 2.0 Google LLC
+  • Google ML Kit & Text Recognition → Google APIs Terms
+  • Android Image Cropper (CanHub) Apache 2.0 2016 Arthur Teplitzkaya
+  • AndroidX Libraries Apache 2.0 Android Open Source Project
+  • Google Gemini AI API → Google Generative AI Terms
+────────────────────────────────────────────────────────────────────────────────
+4.10 AboutActivity (d:\Solvly\app\src\main\java\com\example\solvly\activities\AboutActivity.java)
+────────────────────────────────────────────────────────────────────────────────
+Layout: activity_about.xml
+Displays @string/about_text app mission, key features, version 1.0.0 Stable.
+================================================================================
+
+5. UTILITY CLASSES - DETAILED ANALYSIS
+================================================================================
+
+5.1 SolvlyApp (d:\Solvly\app\src\main\java\com\example\solvly\SolvlyApp.java)
+────────────────────────────────────────────────────────────────────────────────
+Extends: android.app.Application
+onCreate:
+  • applySavedTheme: reads from SharedPreferences solvly_prefs pref_theme:
+    • light → AppCompatDelegate.MODE_NIGHT_NO
+    • dark → AppCompatDelegate.MODE_NIGHT_YES
+    • default/system → AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+────────────────────────────────────────────────────────────────────────────────
+5.2 AISolver.java (d:\Solvly\app\src\main\java\com\example\solvly\utils\AISolver.java)
+────────────────────────────────────────────────────────────────────────────────
+Gemini REST API Client - uses java.net.HttpURLConnection DIRECT REST (NOT client library - avoids dependency issues.)
+Static API_KEYS: loaded comma-separated list of keys from BuildConfig (from local.properties) rotating on HTTP 429/403/400).
+
+PUBLIC API: solveAsync(String rawText, byte[] imageData, String mimeType, AISolverCallback callback)
+
+FAST PATH CHECK:
+  if normalizedText not empty <100 chars → try local MathSolver first.
+  if localResult.isSuccess → immediate return success.
+
+GEMINI REST API CALL Thread):
+  Endpoint POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}
+  Timeouts: connect=10s, read=20s.
+  Request Body JSON:
+    contents: [{ parts: [
+      { text: prompt },
+      { inline_data: { mime_type, data: base64(imageData) } }
+    ] }]
+
+Prompt: "You are an expert math solver. Solve ONLY ONE mathematical problemReturn ONLY as JSON ARRAY with ONE object with keys:
+  • problem_title
+  • cleaned_problem
+  • final_answer
+  • steps: array of strings
+
+RESPONSE PARSING:
+  extract candidates[0].content.parts[0].text
+  remove ```json ``` markers
+  parse JSON array or single JSON object
+  ONE result only (first element results.get(0)) used.)
+
+FALLBACK:
+  If API call failed → handleOfflineFallback MathSolver offline solver.
+  If offline solver fails → error with original error message + "Please connect internet".
+────────────────────────────────────────────────────────────────────────────────
+5.3 MathSolver (d:\Solvly\app\src\main\java\com\example\solvly\utils\MathSolver.java)
+────────────────────────────────────────────────────────────────────────────────
+OFFLINE local mathematical engine regex parsers in order:
+  SolveResult data class: title, scannedText, answer, List<String> steps, boolean isSuccess, errorMessage
+
+Solve order:
+  1. solveUnitConversion: regex "10m to cm", etc. Conversions: m↔cm, km↔m, kg↔g, l↔ml (limited set)
+  2. solveQuadratic: ax² ± bx ± c = 0 → discriminant method quadratic formula)
+  3. solveSimultaneous: ax+by=c, dx+ey=f → Cramer's Rule 2x2 system.
+  4. solveLinearEquation: 3 formats:
+       • ax ± b = c
+       • b ± ax = c
+       • ax = c
+       Supports fractions like x/2 = 5
+  5. solveCalculus: d/dx(ax^n differentiation) and ∫ax^n dx integration power rules
+  6. solveScientific: sqrt, sin/cos/tan DEGREES→radians, a^b exponents
+  7. solveBasicArithmetic → ExpressionEvaluator recursive descent PEMDAS
+ExpressionEvaluator private nested class:
+    • parseExpression add/subtract
+    • parseTerm multiply/divide
+    • parseFactor parentheses/numbers/exponentiation
+
+Normalization:
+    • lowercase, strip whitespace to single
+    • OCR fix l→1 i→1 o→0 (only if no sqrt/sin/cos/tan)
+
+formatResult: integer if whole else trimmed trailing zeros.
+────────────────────────────────────────────────────────────────────────────────
+5.4 CustomMathView (d:\Solvly\app\src\main\java\com\example\solvly\utils\CustomMathView.java)
+────────────────────────────────────────────────────────────────────────────────
+Extends: android.webkit.WebView
+Purpose: Displays math text without LaTeX in styled HTML
+Features:
+  • JavaScript disabled, LOAD_NO_CACHE, transparent background
+  • setText: strips all $$, $, \[,\], \(,\) completely (stripped force plain text
+  • loadData: TextUtils.htmlEncode → escapes HTML injection
+  • CSS: body sans-serif 1.15em line-height:1.4; customizable textColor
+────────────────────────────────────────────────────────────────────────────────
+5.5 HistoryDbHelper (d:\Solvly\app\src\main\java\com\example\solvly\utils\HistoryDbHelper.java)
+────────────────────────────────────────────────────────────────────────────────
+Extends: SQLiteOpenHelper DB Name: history.db Version: 3 (title column added v2→steps, v3→title)
+
+TABLE_HISTORY Schema:
+  • id INTEGER PRIMARY KEY AUTOINCREMENT
+  • title TEXT
+  • problem TEXT
+  • answer TEXT
+  • steps TEXT (JSON array serialized string)
+  • timestamp DATETIME DEFAULT CURRENT_TIMESTAMP (UTC)
+
+onUpgrade:
+  • oldVersion <2 → ADD steps
+  • <3 → ADD title
+
+Methods:
+  • addHistory(title, problem, answer, steps → insert) → steps as JSON array
+  • generateFallbackTitle: first 6 words problem + … if longer than 6 words)
+  • getAllHistory → ordered by timestamp DESC
+  • clearAll() DELETE ALL
+  • deleteOldHistory days DELETE older than N days
+  • deleteHistory(id) delete single item
+Data Model HistoryItem: parses steps JSON array in constructor.
+────────────────────────────────────────────────────────────────────────────────
+5.6 NotificationHelper (d:\Solvly\app\src\main\java\com\example\solvly\utils\NotificationHelper.java)
+────────────────────────────────────────────────────────────────────────────────
+AlarmManager based notifications every 2±30 mins random repeating):
+scheduleNextNotification: AlarmManager.ELAPSED_REALTIME_WAKEUP setAndAllowWhileIdle doze mode
+PendingIntent FLAG_IMMUTABLE modern cancelNotifications alarm cancel
+
+5.7 NotificationReceiver (d:\Solvly\app\src\main\java\com\example\solvly\utils\NotificationReceiver.java)
+────────────────────────────────────────────────────────────────────────────────
+onReceive: Check pref_notifications true →:
+ • create Notification Channel solvly_notifications "Study Reminders"
+• Random 10 motivational messages
+  → opens MainActivity on tap
+• scheduleNextNotification loop continues
+
+5.8 BootReceiver (d:\Solvly\app\src\main\java\com\example\solvly\utils\BootReceiver.java)
+────────────────────────────────────────────────────────────────────────────────
+ ACTION_BOOT_COMPLETED exported=true) → if notifications enabled pref → reschedule next alarm.
+================================================================================
+6. RESOURCES DETAILED ANALYSIS
+================================================================================
+6.1 LAYOUT FILES (24 XML layouts in layout folder d:\Solvly\app\src\main\res\layout
+────────────────────────────────────────────────────────────────────────────────
+Activity layouts):
+1.  activity_intro.xml              → Onboarding
+2.  activity_main.xml              → Home (ConstraintLayout + NestedScrollView + bottom typing)
+3.  activity_result.xml          → Solution page
+4.  activity_history.xml       → History page
+5.  activity_settings.xml         → Main Settings
+6.  activity_general_settings.xml → General Settings
+7.  activity_security_settings.xml → Security
+8.  activity_about.xml          → About page
+9.  activity_policy.xml       → Privacy policy
+10. activity_licence.xml          → License page
+
+Item layouts (RecyclerView items/cards:
+11. item_history.xml         → Single history item (problem/answer + copy/share buttons)
+12. item_history_header.xml  → Date header Today/Yesterday
+13. item_result_card.xml   → A solution result card with the AI results)
+14. item_step_card.xml    → single step explanation
+15. item_setting_row.xml     → Settings row item
+16. item_image_preview.xml         → Main image preview (input input)
+17. item_bug_image_preview.xml → Bug report image preview
+
+Bottom Sheet layoutsMaterialDialog layouts:
+18. layout_theme_selection_sheet.xml → theme picker (3 cards System/Light/Dark)
+19. layout_clear_history_sheet.xml → Clear history confirm
+20. layout_delete_item_sheet.xml → Delete item confirm
+21. layout_report_bug_sheet.xml → Bug report bottom sheet
+22. layout_security_info_sheet.xml → Data encryption info
+23. layout_pin_sheet.xml → PIN sheet (currently present but unused after removed screen lock removed)
+────────────────────────────────────────────────────────────────────────────────
+6.2 DRAWABLE RESOURCES (49 XML drawables d:\Solvly\app\src\main\res\drawable
+────────────────────────────────────────────────────────────────────────────────
+BACKGROUNDS / SHAPES:
+  • bg_bottom_sheet.xml → bottom sheet bg
+  • bg_result_gradient.xml purple-indigo gradient for answer card (gradient purple/indigo)
+  • bg_rounded_dialog.xml dialog bg
+  • bg_typing_bar.xml   chat input bar
+  • divider_line.xml      divider thin horizontal line
+  • intro_bottom_card_bg / intro_icon_bg / intro_pill_bg / intro_button_enabled_bg (gradient purple-indigo intro_gradient_circle Onboarding intro items
+
+ICONS Vector Drawables):
+  • ic_about, ic_accent, ic_attachment_outline
+  • ic_back_custom, ic_bug (beetle), ic_clear_cache
+  • ic_camera_filled / ic_camera_outline
+  • ic_copy, ic_dark, ic_datacontrol
+  • ic_delete_custom, ic_gallery_filled / ic_gallery_outline
+  • ic_history, ic_language, ic_launcher_background
+  • ic_licence, ic_light, ic_math, ic_notification, ic_notification_status
+  • ic_policy, ic_search, ic_security, ic_send_filled, ic_send_outline
+  • ic_settings_custom, ic_share, ic_subscription, ic_theme, ic_workspace
+
+SELECTORS StateListDrawable states):
+  • sel_camera.xml camera icons filled/outline
+  • sel_gallery.xml gallery icons filled/outline
+  • sel_send.xml send filled/outline
+
+6.3 COLORS (values colors.xml & values-night colors.xml d:\Solvly\app\src\main\res\values\colors.xml
+────────────────────────────────────────────────────────────────────────────────
+Light Mode:
+  primary #6366F1 (Indigo)
+  primary_variant #4F46E5
+  primary_light #EEF2FF
+  on_primary #FFFFFF
+  background / surface: #FFFFFF (white)
+  on_surface: #1E293B (dark slate text)
+  text_secondary #64748B (gray text)
+  divider #E2E8F0 (light gray divider)
+  message_bar_bg #FFFFFF (white)
+  surface_card #FFFFFF
+  status_bar_light #F1F5F9 (gray-50)
+  card_stroke #F2F2F7
+  hint_color #8E8E93 (gray)
+  history_divider #F1F5F9
+
+Dark Mode values-night:
+  background: #0F172A (slate-900)
+  surface / message_bar_bg / surface_card: #1E293B (slate-800)
+  on_surface #F1F5F9 slate-100 white text)
+  text_secondary #94A3B8 (slate-400)
+  divider / card_stroke / history_divider #334155 (slate-700)
+  primary_light #1E1B4B indigo-950
+  status_bar_light #0F172A background
+  hint_color #64748B
+────────────────────────────────────────────────────────────────────────────────
+6.4 STRINGS (d:\Solvly\app\src\main\res\values\strings.xml
+────────────────────────────────────────────────────────────────────────────────
+app_name Solvly
+policy_text full privacy policy text
+licence_text full license text
+about_text full about text
+────────────────────────────────────────────────────────────────────────────────
+6.5 THEMES
+────────────────────────────────────────────────────────────────────────────────
+Base.Theme.Solvly parent Theme.Material3.DayNight.NoActionBar)
+values themes.xml: windowLightStatusBar + status bar color status_bar_lightvalues-night themes.xml: status bar same as background no light status bars.
+Additional Styles: SettingsSectionTitle uppercase gray SettingsCard Material3 CardView Elevated 16dp corner radius 1dp elevation stroke 1dp divider. SettingsContainer vertical showDividers middle
+
+6.6 MIPMAP LAUNCHER ICONS
+────────────────────────────────────────────────────────────────────────────────
+mipmap-anydpi-v26 ic_launcher ic_launcher_round adaptive icons ic_launcher_foreground + ic_launcher_background.
+mipmap hdpi mdpi xhdpi xxhdpi xxxhdpi density-specific webp icons (ic_launcher.webp & round version).
+
+6.7 XML CONFIGS (d:\Solvly\app\src\main\res\xml
+────────────────────────────────────────────────────────────────────────────────
+  • backup_rules.xml → xml fullBackupContent
+  • data_extraction_rules.xml dataExtractionRules
+  • file_paths.xml → FileProvider shared files/cache dirs images  0/cache
+================================================================================
+7. APPLICATION FLOW & USER JOURNEY
+================================================================================
+
+App Entry Point → IntroActivity.java LAUNCHER)
+
+Complete end-to-end Journey:
+1. App Installed & Opened
+   → IntroActivity
+   → Check Policy in SharedPrefs?
+     → First time launch? Show Intro. Checkbox + Click Policy link opens PolicyActivity
+      → Checkbox Checked → Continue enabled → Save KEY_POLICY_ACCEPTED=true
+      → Flag CLEAR_TASK → MainActivity.
+   → Re-launch already accepted → skip Intro go →.
+
+2. MainActivity (Home Screen
+   → Welcome text + Quote card How to use 3 steps.
+   → Bottom typing bar:
+      → Type problem → Gallery/Camera buttons hide attachment paperclip).
+      → Attach 1 image max.)
+      → Image preview horizontal → Delete)
+   → Tap Gallery pick → Crop (dark cropper.
+   → Tap Camera → capture → Crop
+   → SEND (blue if something
+
+3. ResultActivity Solution Page)
+   → Loading layout reading/solving...
+   → → OCR → combine + text → combined
+   → Local solver fast path.
+   → → AI REST API (Gemini 2.0 Flash
+   → 1 Result Card Problem Statement, Final Answer Card, Steps listed cards
+   → history, Copy to clipboard, Share any app).
+
+4. History from result saved automatically if enabled:
+   → HistoryActivity from Settings → History
+   → Today/Yesterday/date grouping headers
+   → Search problem/answer filter.
+   → Swipe delete.
+   → → reopens ResultActivity same solution no re-solve.
+
+5. Settings from gear → Settings
+   → Theme System/Light/Dark
+   → Notifications random every)
+   → Bug report (email with screenshots.
+   → Clear Cache
+   → General Settings → Auto-save + Auto-Delete days.
+   → Security only encryption info (only).
+   → → Policy/License/About static pages.
+
+================================================================================
+8. DATA STORAGE & PERSISTENCE
+================================================================================
+TWO SharedPreferences FILES:
+
+A) solvly_prefs (MODE_PRIVATE)
+  • policy_accepted boolean Intro)
+  • pref_theme String system/light/dark
+  • pref_notifications boolean
+
+B) SolvlyPrefs
+  • auto_save_history boolean default true
+  • auto_delete_days int default 30 (1/15/30/60/-1)
+  • (Note: Two separate)
+
+ONE SQLite Database:
+  • history.db  version 3 TABLE history.
+  • Stores: id title problem answer steps (JSON array timestamp CURRENT_TIMESTAMP UTC)
+Internal Storage:
+  • getCacheDir images cropped images GALLERY_ and TEMP_IMG_ temp image temp images
+  • TEMP_IMG camera temp captured image.
+================================================================================
+9. AI / OCR PIPELINE
+================================================================================
+Input Flow Diagram:
+  Input Image / Text →
+    ↓
+  Crop Image if image)
+    ↓
+  ML Kit OCR (Latin TextRecognizer) image
+    ↓
+  Combine: typed text + \n + ocrText → combined String
+    ↓
+  FAST PATH: text < 100 chars? Try local MathSolver offline?
+    ├─ YES → return result.
+    └─ NO → AISolver REST.
+    ↓
+  AISolver.solveAsync Thread HTTP POST Gemini REST API BASE64 image inline)
+    ↓
+  Parse JSON: ONE SolveResult(title, problem, answer, steps)
+    ↓
+  Save to History auto-save)
+    ↓
+  Render result result card
+================================================================================
+10. FEATURE SUMMARY COMPLETE
+================================================================================
+✓ Onboarding Privacy Policy Checkbox + acceptance Intro animations.
+✓ Text Input: EditText up to 3000 chars multi-line)
+✓ Capture Photo via Camera (permission required)
+✓ Pick Gallery Image pick
+✓ Image Cropping CanHub cropper dark-themed
+✓ Max 1 image limit MAX_IMAGES = 1
+✓ OCR image to text via Google ML Kit Text Recognition Latin script)
+✓ Local Offline Math Solver: arithmetic, linear/quad/simultaneous equations, unit conversion, calculus derivatives/integrals, scientific trig sqrt exponents)
+✓ Online AI Solver: Google Gemini 2.0 Flash via REST (API keys list rotated failover)
+✓ Single problem single result only (always shows only 1)
+✓ Copy & Share solution complete Problem + Answer + steps both screens & History)
+✓ Problem History date headers, search, swipe-delete, clear all)
+✓ Theme System/Light/Dark)
+✓ Notifications: every ~2 hours random study reminder AlarmManager + BootReceiver boot rescheduling)
+✓ Clear Cache + size display)
+✓ Auto-save history toggle Yes/No)
+✓ Auto-Delete Old Data 1/15/30/60/never days)
+✓ Report Bug bottom sheet edit text + 3 images (screenshots via email
+✓ Privacy Policy License (screen
+✓ About screen
+✓ Dark mode support icons tinted + surface colors proper.
+================================================================================
+11. KNOWN OBSERVATIONS & SUGGESTIONS
+================================================================================
+Observations:
+1. TWO separate SharedPreferences names (solvly_prefs vs SolvlyPrefs inconsistent. Could be unified into single one to avoid confusion naming.
+2. libs.versions.toml has unused entries generativeai / guava (unused in actual dependencies in app/build.gradle)
+3. layout_pin_sheet.xml still exists even though screen lock removed.
+4. Hidden placeholder rows (visibility gone): Accent Color, Subscription, Workspace, Data Control in Settings; Solving Preferences, App Behavior cards in General Settings.
+5. Subscription Workspace Data Control rows placeholder rows (hidden).
+6. API key local.properties GEMINI_API_KEYS is comma separated → not documented for developers.
+7. proguard-rules.pro empty (no custom keep rules)
+8. Both unit test & instrumented test example only placeholder.
+
+Suggestions for improvement:
+• Unify SharedPreferences file names
+• Remove unused layout_pin_sheet.xml and unused libs entries
+• Implement placeholder settings rows (or hide if not planned soon)
+• Add dark/light mode check throughout all dialog corners more testing
+• Add actual unit tests for MathSolver
+• Add input validation & error handling
+
+================================================================================
+END OF DETAILED PROJECT REPORT
+================================================================================

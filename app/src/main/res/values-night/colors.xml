@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#0F172A</color>
+    <color name="surface">#1E293B</color>
+    <color name="on_surface">#F1F5F9</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="divider">#334155</color>
+    <color name="message_bar_bg">#1E293B</color>
+    <color name="surface_card">#1E293B</color>
+    <color name="primary_light">#1E1B4B</color>
+    <color name="status_bar_light">#0F172A</color>
+    <color name="card_stroke">#334155</color>
+    <color name="hint_color">#64748B</color>
+    <color name="section_title">#94A3B8</color>
+    <color name="history_divider">#334155</color>
+    <color name="send_button_disabled">#2A2A32</color>
+    <color name="error">#F87171</color>
+    <color name="on_error">#0F172A</color>
+    <color name="swipe_background">#7F1D1D</color>
+    <color name="swipe_text">#F1F5F9</color>
+</resources>

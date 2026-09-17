@@ -1,0 +1,29 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Camera Body (Highly Rounded as per reference) -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M17,8H15.5C15,8 14.5,7.5 14.2,7.1L13.3,5.9C13,5.4 12.5,5 12,5H8C7.5,5 7,5.4 6.7,5.9L5.8,7.1C5.5,7.5 5,8 4.5,8H4C2.9,8 2,8.9 2,10V17C2,18.1 2.9,19 4,19H12" />
+    
+    <!-- Large Circular Lens -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M10,13.5m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    
+    <!-- Bold Rounded Plus Sign -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M19,15V22M15.5,18.5H22.5" />
+</vector>

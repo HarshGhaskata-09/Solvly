@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Premium Indigo Palette -->
+    <color name="primary">#6366F1</color>
+    <color name="primary_variant">#4F46E5</color>
+    <color name="primary_light">#EEF2FF</color>
+    <color name="on_primary">#FFFFFF</color>
+    
+    <!-- Neutral Colors -->
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_surface">#1E293B</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="divider">#E2E8F0</color>
+    <color name="message_bar_bg">#FFFFFF</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="status_bar_light">#F1F5F9</color>
+    <color name="card_stroke">#F2F2F7</color>
+    <color name="hint_color">#8E8E93</color>
+    <color name="section_title">#8E8E93</color>
+    <color name="history_divider">#F1F5F9</color>
+    <color name="send_button_disabled">#F1F5F9</color>
+    <color name="error">#DC2626</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="swipe_background">#DC2626</color>
+    <color name="swipe_text">#FFFFFF</color>
+</resources>
